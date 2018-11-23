@@ -1,0 +1,10 @@
+[run]
+branch = True
+omit = *migrations*,
+       *urls*,
+       *test*,
+       *admin*,
+       ./manage.py,
+       ./stadium/config/*,
+       ./stadium/wsgi.py,
+       *__init__*
