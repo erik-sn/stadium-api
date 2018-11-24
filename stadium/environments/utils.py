@@ -2,13 +2,13 @@ import logging
 from typing import Dict
 
 from stadium.users.models import User
-from stadium.repos.models import Repo
+from stadium.environments.models import Environment
 from stadium.utils.errors import GithubException
 
 logger = logging.getLogger('django')
 
 
-def initialize_repo_from_json(json: Dict, owner: User) -> Repo:
+def initialize_repo_from_json(json: Dict, owner: User) -> Environment:
     try:
         github_id = json['id']
         transformed_json = {
@@ -33,14 +33,14 @@ def initialize_repo_from_json(json: Dict, owner: User) -> Repo:
             'owner': owner,
             # 'readme': ???  # TODO implement this
         }
-        if Repo.objects.filter(github_id=github_id).exists():
+        if Environment.objects.filter(github_id=github_id).exists():
             # TODO test that this actually works on a real repo!!
             logger.info('Updating existing repo {} with github ID {}'.format(json['name'], github_id))
-            Repo.objects.filter(github_id=github_id).update(**transformed_json)
-            return Repo.objects.get(github_id=github_id)
+            Environment.objects.filter(github_id=github_id).update(**transformed_json)
+            return Environment.objects.get(github_id=github_id)
         else:
             logger.info('Creating new repo {} with github ID {}'.format(json['name'], github_id))
-            return Repo.objects.create(**transformed_json)
+            return Environment.objects.create(**transformed_json)
 
     except KeyError:
         logger.exception('message')

@@ -16,7 +16,6 @@ class Common(Configuration):
         'django.contrib.messages',
         'django.contrib.staticfiles',
 
-
         # Third party apps
         'rest_framework',            # utilities for rest apis
         'rest_framework.authtoken',  # token authentication
@@ -30,7 +29,7 @@ class Common(Configuration):
 
         # Your apps
         'stadium.users',
-        'stadium.repos',
+        'stadium.environments',
 
     )
 
@@ -206,8 +205,12 @@ class Common(Configuration):
         'PAGE_SIZE': int(os.getenv('DJANGO_PAGINATION_LIMIT', 10)),
         'DATETIME_FORMAT': '%Y-%m-%dT%H:%M:%S%z',
         'DEFAULT_RENDERER_CLASSES': (
+            'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
             'rest_framework.renderers.JSONRenderer',
             'rest_framework.renderers.BrowsableAPIRenderer',
+        ),
+        'DEFAULT_PARSER_CLASSES': (
+            'djangorestframework_camel_case.parser.CamelCaseJSONParser',
         ),
         'DEFAULT_PERMISSION_CLASSES': [
             'rest_framework.permissions.AllowAny',
@@ -217,7 +220,7 @@ class Common(Configuration):
             # 'rest_framework.authentication.TokenAuthentication',
             'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
             'rest_framework_social_oauth2.authentication.SocialAuthentication',
-        )
+        ),
     }
 
     AUTHENTICATION_BACKENDS = (
@@ -228,6 +231,7 @@ class Common(Configuration):
 
     SOCIAL_AUTH_GITHUB_KEY = os.environ['SOCIAL_AUTH_GITHUB_KEY']
     SOCIAL_AUTH_GITHUB_SECRET = os.environ['SOCIAL_AUTH_GITHUB_SECRET']
+    SOCIAL_AUTH_GITHUB_CALLBACK = os.environ['SOCIAL_AUTH_GITHUB_CALLBACK']
     SOCIAL_AUTH_GITHUB_SCOPE = []
 
     CORS_ORIGIN_WHITELIST = (

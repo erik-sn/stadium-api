@@ -7,6 +7,7 @@ from rest_framework.response import Response
 @api_view(['GET'])
 def app_config(request):
     config = {
-        'github_client_id': settings.SOCIAL_AUTH_GITHUB_KEY
+        'github_client_id': settings.SOCIAL_AUTH_GITHUB_KEY,
+        'github_callback_url': settings.SOCIAL_AUTH_GITHUB_CALLBACK,
     }
     return Response(config, status=status.HTTP_200_OK)

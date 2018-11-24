@@ -6,13 +6,14 @@ from django.views.generic.base import RedirectView
 from rest_framework.routers import DefaultRouter
 
 from .users.views import UserViewSet, UserCreateViewSet
-from .repos.views import RepoViewSet
+from .environments.views import EnvironmentViewSet, RepositoryViewSet
 from .config.views import app_config
 
 router = DefaultRouter()
 router.register('users', UserViewSet)
 router.register('users', UserCreateViewSet)
-router.register('repos', RepoViewSet)
+router.register('environments', EnvironmentViewSet)
+router.register('repositories', EnvironmentViewSet)
 
 urlpatterns = [
     path('api/admin/', admin.site.urls),
@@ -20,8 +21,6 @@ urlpatterns = [
     path('api/auth/', include('rest_framework_social_oauth2.urls')),
     path('api/v1/app_config/', app_config),
     path('api/v1/', include(router.urls)),
-    # path('api-token-auth/', views.obtain_auth_token),
-    # path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
     # the 'api-root' from django rest-frameworks default router
     # http://www.django-rest-framework.org/api-guide/routers/#defaultrouter

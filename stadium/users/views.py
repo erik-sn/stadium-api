@@ -60,14 +60,15 @@ class UserCreateViewSet(mixins.CreateModelMixin,
                 return Response(github_response.json(), status=status.HTTP_400_BAD_REQUEST)
 
             github_access_token = github_response.json()['access_token']
-            response = self._convert_github_token_to_app_token(github_access_token)
+            convert_response = self._convert_github_token_to_app_token(github_access_token)
+            if 'error' in convert_response.json():
+                return Response(convert_response.json(), status=status.HTTP_400_BAD_REQUEST)
 
-            user_access_token = response.json()['access_token']
+            user_access_token = convert_response.json()['accessToken']
             user = AccessToken.objects.get(token=user_access_token).user
-
             user_data = UserSerializer(user).data
 
-            return Response({**response.json(), **user_data}, status=response.status_code)
+            return Response({**convert_response.json(), **user_data}, status=convert_response.status_code)
         except GithubException as exception:
             logger.exception('message')
             raise exception
