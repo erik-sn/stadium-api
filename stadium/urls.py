@@ -13,7 +13,7 @@ router = DefaultRouter()
 router.register('users', UserViewSet)
 router.register('users', UserCreateViewSet)
 router.register('environments', EnvironmentViewSet)
-router.register('repositories', EnvironmentViewSet)
+router.register('repositories', RepositoryViewSet)
 
 urlpatterns = [
     path('api/admin/', admin.site.urls),
