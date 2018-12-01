@@ -9,8 +9,8 @@ from django.conf import settings
 from social_django.models import UserSocialAuth
 
 from stadium.users.models import User
-from stadium.environments.models import Environment
-from stadium.environments.utils import initialize_repo_from_json
+from stadium.repositories.models import Repository
+from stadium.repositories.utils import initialize_repo_from_json
 from .errors import GithubException
 
 logger = logging.getLogger('django')
@@ -61,7 +61,7 @@ class GithubUtils:
         self.user = user
         self.client = GithubApiClient(user)
 
-    def create_or_refresh_gym_repos(self) -> List[Environment]:
+    def create_or_refresh_gym_repos(self) -> List[Repository]:
         valid_repos = []
         for repo in self.client.repos():
             # TODO need to multi-thread this

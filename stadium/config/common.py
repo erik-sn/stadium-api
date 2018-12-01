@@ -29,7 +29,7 @@ class Common(Configuration):
 
         # Your apps
         'stadium.users',
-        'stadium.environments',
+        'stadium.repositories',
 
     )
 

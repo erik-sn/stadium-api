@@ -33,21 +33,9 @@ class Repository(Base):
     license = models.CharField(max_length=256, null=True)
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     readme = models.TextField(blank=True, null=True)
+    public = models.BooleanField(default=True)
+    pypi_name = models.CharField(max_length=256, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = 'repositories'
 
-
-class Environment(Base):
-    """
-    represents a Github repository that contains a pypi gym environment
-    """
-    # TODO - chronjob to refresh repo information
-    # TODO - allow user to manually refresh information
-
-    # fields not from github at all that we have to derive
-    pypi_url = models.URLField(null=True, blank=True)
-    pypi_name = models.CharField(max_length=256)
-    repository = models.ForeignKey(Repository, on_delete=models.SET_NULL, null=True)
-    name = models.CharField(max_length=256)
-    public = models.BooleanField(default=True)

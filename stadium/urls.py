@@ -6,13 +6,12 @@ from django.views.generic.base import RedirectView
 from rest_framework.routers import DefaultRouter
 
 from .users.views import UserViewSet, UserCreateViewSet
-from .environments.views import EnvironmentViewSet, RepositoryViewSet
+from .repositories.views import RepositoryViewSet
 from .config.views import app_config
 
 router = DefaultRouter()
 router.register('users', UserViewSet)
 router.register('users', UserCreateViewSet)
-router.register('environments', EnvironmentViewSet)
 router.register('repositories', RepositoryViewSet)
 
 urlpatterns = [

@@ -9,6 +9,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.urls import reverse
 from django.conf import settings
+from django.shortcuts import get_object_or_404
 
 from stadium.utils.errors import GithubException
 from stadium.utils.github import GithubApiClient
@@ -28,6 +29,11 @@ class UserViewSet(mixins.RetrieveModelMixin,
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsUserOrReadOnly,)
+
+    @action(methods=['GET'], detail=False)
+    def me(self, request):
+        user = get_object_or_404(User, id=request.user.id)
+        return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
 
 
 class UserCreateViewSet(mixins.CreateModelMixin,
@@ -73,6 +79,16 @@ class UserCreateViewSet(mixins.CreateModelMixin,
             logger.exception('message')
             raise exception
 
-
-
+    @action(methods=['POST'], detail=True)
+    def refresh_token(self, request, pk=None):
+        endpoint = settings.API_HOST + reverse('token')
+        application = Application.objects.get(name__iexact='github')
+        response = requests.post(endpoint, params={
+            'grant_type': 'refresh_token',
+            'client_id': application.client_id,
+            'client_secret': application.client_secret,
+            'refresh_token': pk,
+        })
+        logger.info(response.content)
+        return Response(response.json(), status=response.status_code)
 
