@@ -17,7 +17,7 @@ router.register('repositories', RepositoryViewSet)
 urlpatterns = [
     path('api/admin/', admin.site.urls),
     path('api/watchman/', include('watchman.urls')),
-    path('api/auth/', include('rest_framework_social_oauth2.urls')),
+    path('api/v1/auth/', include('rest_framework_social_oauth2.urls')),
     path('api/v1/app_config/', app_config),
     path('api/v1/', include(router.urls)),
 
