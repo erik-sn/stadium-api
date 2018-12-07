@@ -15,7 +15,7 @@ class Repository(Base):
     name = models.CharField(max_length=256)  # TODO what is the actual max length?
     full_name = models.CharField(max_length=256)  # TODO what is the actual max length?
     homepage = models.URLField(null=True, blank=True)
-    description = models.TextField(blank=True, default='')
+    description = models.TextField(blank=True, default='', null=True)
     private = models.BooleanField()
     fork = models.BooleanField()
     size = models.PositiveIntegerField()  # TODO what is this?

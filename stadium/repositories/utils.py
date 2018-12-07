@@ -15,7 +15,7 @@ def initialize_repo_from_json(json: Dict, owner: User) -> Repository:
             'name': json['name'],
             'full_name': json['full_name'],
             'homepage': json['homepage'],
-            'description': json['description'] + ' asdfasdfasdf',
+            'description': json['description'],
             'private': json['private'],
             'fork': json['fork'],
             'size': json['size'],

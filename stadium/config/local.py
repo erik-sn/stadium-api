@@ -19,6 +19,12 @@ class Local(Common):
         '--cover-package=stadium'
     ]
 
+    MIDDLEWARE = Common.MIDDLEWARE
+    MIDDLEWARE += ('whitenoise.middleware.WhiteNoiseMiddleware',)
+
+    # whitenoise config
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
     # Mail
     EMAIL_HOST = 'localhost'
     EMAIL_PORT = 1025
