@@ -3,7 +3,7 @@ import logging
 import requests
 from oauth2_provider.admin import AccessToken
 from oauth2_provider.models import Application
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -14,7 +14,6 @@ from django.shortcuts import get_object_or_404
 from stadium.utils.errors import GithubException
 from stadium.utils.github import GithubApiClient
 from .models import User
-from .permissions import IsUserOrReadOnly
 from .serializers import CreateUserSerializer, UserSerializer
 
 logger = logging.getLogger('django')
@@ -28,12 +27,18 @@ class UserViewSet(mixins.RetrieveModelMixin,
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (IsUserOrReadOnly,)
+    permission_classes = (IsAuthenticated,)
 
     @action(methods=['GET'], detail=False)
     def me(self, request):
         user = get_object_or_404(User, id=request.user.id)
         return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
+
+    @action(methods=['POST'], detail=False)
+    def logout(self, request):
+        application = Application.objects.get(name__iexact='github')
+        AccessToken.objects.filter(user=request.user, application=application).delete()
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
 
 
 class UserCreateViewSet(mixins.CreateModelMixin,
@@ -91,4 +96,3 @@ class UserCreateViewSet(mixins.CreateModelMixin,
         })
         logger.info(response.content)
         return Response(response.json(), status=response.status_code)
-
