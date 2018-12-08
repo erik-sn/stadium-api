@@ -9,6 +9,9 @@ from .users.views import UserViewSet, UserCreateViewSet
 from .repositories.views import RepositoryViewSet
 from .config.views import app_config
 
+if settings.DEBUG is True:
+    from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
 router = DefaultRouter()
 router.register('users', UserViewSet)
 router.register('users', UserCreateViewSet)
@@ -26,3 +29,6 @@ urlpatterns = [
     re_path(r'^/api$', RedirectView.as_view(url=reverse_lazy('api-root'), permanent=False)),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.DEBUG is True:
+    urlpatterns += staticfiles_urlpatterns()

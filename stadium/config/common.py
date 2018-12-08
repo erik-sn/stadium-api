@@ -84,8 +84,11 @@ class Common(Configuration):
 
     # Static files (CSS, JavaScript, Images)
     # https://docs.djangoproject.com/en/2.0/howto/static-files/
-    STATIC_ROOT = os.path.normpath(join(os.path.dirname(BASE_DIR), 'static'))
-    STATICFILES_DIRS = []
+    STATIC_ROOT = os.path.normpath(join(os.path.dirname(BASE_DIR), 'static/django'))
+    STATIC_FILES = os.path.normpath(join(os.path.dirname(BASE_DIR), 'static'))
+    STATICFILES_DIRS = [
+        STATIC_FILES,
+    ]
     STATIC_URL = '/static/'
     STATICFILES_FINDERS = (
         'django.contrib.staticfiles.finders.FileSystemFinder',
