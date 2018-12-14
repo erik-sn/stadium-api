@@ -12,6 +12,7 @@ logger = logging.getLogger('django')
 
 class Repository(Base):
     # fields exact same as github API JSON
+    # TODO which fields are not private?
     name = models.CharField(max_length=256)  # TODO what is the actual max length?
     full_name = models.CharField(max_length=256)  # TODO what is the actual max length?
     homepage = models.URLField(null=True, blank=True)
@@ -35,6 +36,9 @@ class Repository(Base):
     readme = models.TextField(blank=True, null=True)
     public = models.BooleanField(default=True)
     pypi_name = models.CharField(max_length=256, null=True, blank=True)
+
+    # fields not based on github API
+    # gym_repo = models.BooleanField(default=False) # TODO implement this field
 
     class Meta:
         verbose_name_plural = 'repositories'

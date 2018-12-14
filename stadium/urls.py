@@ -8,6 +8,7 @@ from rest_framework.routers import DefaultRouter
 from .users.views import UserViewSet, UserCreateViewSet
 from .repositories.views import RepositoryViewSet
 from .config.views import app_config
+from .environments.views import EnvironmentViewSet
 
 if settings.DEBUG is True:
     from django.contrib.staticfiles.urls import staticfiles_urlpatterns
@@ -16,6 +17,7 @@ router = DefaultRouter()
 router.register('users', UserViewSet)
 router.register('users', UserCreateViewSet)
 router.register('repositories', RepositoryViewSet)
+router.register('environments', EnvironmentViewSet)
 
 urlpatterns = [
     path('api/admin/', admin.site.urls),
