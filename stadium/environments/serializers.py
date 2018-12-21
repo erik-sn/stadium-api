@@ -11,11 +11,11 @@ class EnvironmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Environment
         depth = 1
-        fields = ('id', 'name', 'description', 'repository')
+        fields = ('id', 'name', 'description', 'repository', 'tags')
 
 class EnvironmentWriteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Environment
         depth = 1
-        fields = ('id', 'name', 'description', 'repository')
+        fields = ('id', 'name', 'description', 'repository', 'tags')

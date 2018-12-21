@@ -38,7 +38,7 @@ class Repository(Base):
     pypi_name = models.CharField(max_length=256, null=True, blank=True)
 
     # fields not based on github API
-    # gym_repo = models.BooleanField(default=False) # TODO implement this field
+    gym = models.BooleanField(default=False)
 
     class Meta:
         verbose_name_plural = 'repositories'

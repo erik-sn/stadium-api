@@ -41,7 +41,8 @@ class EnvironmentViewSet(viewsets.ModelViewSet):
         env = Environment.objects.create(
             name=request.data['name'],
             description=request.data['description'],
-            repository=Repository.objects.get(id=request.data['repository']) #check for right owner
+            repository=Repository.objects.get(id=request.data['repository']),
+            tags=request.data['tags']
         )
         serializer = EnvironmentWriteSerializer(env)
         return Response(serializer.data, status=201)

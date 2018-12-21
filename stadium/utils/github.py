@@ -65,26 +65,39 @@ class GithubUtils:
         valid_repos = []
         for repo in self.client.repos():
 
-            # base 64 encoded readme.md:
+            ## base 64 encoded readme.md:
             response = requests.get(repo['contents_url'].replace('contents/{+path}', 'readme'), headers=self.client.headers)
             if response.ok:
                 readme = response.json()
                 repo.update({'readme': readme['content']})
 
-            # use application/vnd.github.VERSION.html in header:
+            ## use application/vnd.github.VERSION.html in header:
             # header = self.client.headers
             # header.update({'Accept': 'application/vnd.github.v3.html'})
             # response = requests.get(repo['contents_url'].replace('contents/{+path}', 'readme'), headers=header)
             # if response.ok:
             #     readme = response.content
-            #     repo.update({'readme': readme})
+            #     # logger.info(f'readme: {readme.decode("utf-8")}')
+            #     repo.update({'readme': readme.decode("utf-8")})
+
+            ## use application/vnd.github.VERSION.raw in header:
+            # header = self.client.headers
+            # header.update({'Accept': 'application/vnd.github.v3.raw'})
+            # response = requests.get(repo['contents_url'].replace('contents/{+path}', 'readme'), headers=header)
+            # if response.ok:
+            #     readme = response.content
+            #     # logger.info(f'readme: {readme.decode("utf-8")}')
+            #     repo.update({'readme': readme.decode("utf-8")})
 
             else:
                 logger.info('Failed to included Readme.md.')
                 repo.update({'readme': null})
             # TODO need to multi-thread this
             if self._is_gym_repo(repo['contents_url'].replace('{+path}', '')):
-                valid_repos.append(repo)
+                repo.update({'gym': True})
+            else:
+                repo.update({'gym': False})
+            valid_repos.append(repo)
         return [initialize_repo_from_json(repo, self.user) for repo in valid_repos]
 
     def _is_gym_repo(self, url: str):

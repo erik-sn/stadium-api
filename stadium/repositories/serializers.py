@@ -12,5 +12,5 @@ class RepositorySerializer(serializers.ModelSerializer):
         depth = 1
         fields = ('id', 'name', 'description', 'owner', 'homepage', 'private', 'fork', 'size',
                   'forks', 'stargazers_count', 'license', 'api_url', 'html_url', 'ssh_url',
-                  'git_url', 'readme', 'pypi_name')
+                  'git_url', 'readme', 'pypi_name', 'gym')
 
