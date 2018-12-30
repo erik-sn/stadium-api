@@ -70,25 +70,6 @@ class GithubUtils:
             if response.ok:
                 readme = response.json()
                 repo.update({'readme': readme['content']})
-
-            ## use application/vnd.github.VERSION.html in header:
-            # header = self.client.headers
-            # header.update({'Accept': 'application/vnd.github.v3.html'})
-            # response = requests.get(repo['contents_url'].replace('contents/{+path}', 'readme'), headers=header)
-            # if response.ok:
-            #     readme = response.content
-            #     # logger.info(f'readme: {readme.decode("utf-8")}')
-            #     repo.update({'readme': readme.decode("utf-8")})
-
-            ## use application/vnd.github.VERSION.raw in header:
-            # header = self.client.headers
-            # header.update({'Accept': 'application/vnd.github.v3.raw'})
-            # response = requests.get(repo['contents_url'].replace('contents/{+path}', 'readme'), headers=header)
-            # if response.ok:
-            #     readme = response.content
-            #     # logger.info(f'readme: {readme.decode("utf-8")}')
-            #     repo.update({'readme': readme.decode("utf-8")})
-
             else:
                 logger.info('Failed to included Readme.md.')
                 repo.update({'readme': null})
