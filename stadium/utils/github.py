@@ -64,9 +64,21 @@ class GithubUtils:
     def create_or_refresh_gym_repos(self) -> List[Repository]:
         valid_repos = []
         for repo in self.client.repos():
+
+            ## base 64 encoded readme.md:
+            response = requests.get(repo['contents_url'].replace('contents/{+path}', 'readme'), headers=self.client.headers)
+            if response.ok:
+                readme = response.json()
+                repo.update({'readme': readme['content']})
+            else:
+                logger.info('Failed to included Readme.md.')
+                repo.update({'readme': null})
             # TODO need to multi-thread this
             if self._is_gym_repo(repo['contents_url'].replace('{+path}', '')):
-                valid_repos.append(repo)
+                repo.update({'gym': True})
+            else:
+                repo.update({'gym': False})
+            valid_repos.append(repo)
         return [initialize_repo_from_json(repo, self.user) for repo in valid_repos]
 
     def _is_gym_repo(self, url: str):
