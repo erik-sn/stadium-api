@@ -32,7 +32,7 @@ class Repository(Base):
     github_id = models.PositiveIntegerField()
     api_url = models.URLField()
     license = models.CharField(max_length=256, null=True)
-    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     readme = models.TextField(blank=True, null=True)
     public = models.BooleanField(default=True)
     pypi_name = models.CharField(max_length=256, null=True, blank=True)

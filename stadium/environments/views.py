@@ -13,21 +13,6 @@ from .serializers import (
 )
 from .permissions import IsOwnerOrReadOnly
 
-"""
-UI
-- input field (search happens)
-- after the user types some characters (3 or more) then we call the API for a search
-    - Debounce
-        - debounce(call_search_api, 500)
-        - user types in mario very quickly
-            - 1 API call
-- once we get the API call results display in a dropdown beneath the input field
-
-API
-- In a view implement the filter
-- typically with query parameters /environments?name=mario&tags=test,python,javascript&owner=erik
-"""
-
 logger = logging.getLogger('django')
 
 WRITE_VERBS = ['POST', 'PUT']
@@ -63,33 +48,25 @@ class EnvironmentViewSet(viewsets.ModelViewSet):
     def filter(self, request):
 
         from django.db.models import Q
-        # User.objects.filter(Q(income__gte=5000) | Q(income__isnull=True))
 
-        # /api/v1/environments/filter/
-        # python erik
-        # http://0.0.0.0:8000/api/v1/environments/filter/?search=mario,python
         search_terms = request.GET.get('search', '').split(',')
         if len(search_terms) == 0:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        logger.info(search_terms)
-        """
-        condition = Q(full_name__icontains=s[0])
-        for string in strings[1:]:
-            condition &= Q(full_name__icontains=string)
-        queryset = Profile.objects.filter(condition) 
-        """
-        # Environment.objects.filter(name__isnull=False)
-
         query = Q(name__isnull=False)  # initialize the query with a condition we always know is true
-        for term in search_terms:
-            query &= Q(name__icontains=term) # | Q(tags__contains=[term])  # TODO turn on tag filtering
-
+        search_query = query
+        for i, term in enumerate(search_terms):
+            if not i:
+                search_query = Q(name__icontains=term) | Q(tags__icontains=term)
+            else:
+                search_query |= Q(name__icontains=term)
+                search_query |= Q(tags__icontains=term)
+        query &= search_query
         logger.debug(query)
 
         environments = Environment.objects.filter(query).select_related('repository')
 
         serializer = EnvironmentSerializer(environments, many=True)
         data = serializer.data
-        logger.info(len(data))
+
         return Response(serializer.data, status=status.HTTP_200_OK)

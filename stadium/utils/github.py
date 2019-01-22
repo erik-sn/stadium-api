@@ -118,7 +118,7 @@ class GithubUtils:
         dependencies = getattr(getattr(kwarg, 'value'), 'elts')
         for dependency in dependencies:
             package_name = getattr(dependency, 's')  # I don't know why this is "s"!
-            if 'gym' in package_name:  # TODO this is too naive, need to find a way to limit this to explicity gym
+            if 'gym' in package_name or 'scigym' in package_name:  # TODO this is too naive, need to find a way to limit this to explicity gym
                 return True
         return False
 
