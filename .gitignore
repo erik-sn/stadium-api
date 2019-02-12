@@ -101,7 +101,10 @@ venv.bak/
 /site
 
 # django staticfiles
-/static
+/static/django
+/static/admin
+/static/django_extensions
+/static/rest_framework
 
 # mypy
 .mypy_cache/
