@@ -29,10 +29,27 @@ class UserViewSet(mixins.RetrieveModelMixin,
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated,)
 
+    @action(methods=['POST'], detail=False)
+    def update_me(self, request):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            user = get_object_or_404(User, id=request.user.id)
+            user.first_name = serializer.data['first_name']
+            user.last_name = serializer.data['last_name']
+            user.email = serializer.data['email']
+            user.save()
+            return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
+
     @action(methods=['GET'], detail=False)
     def me(self, request):
         user = get_object_or_404(User, id=request.user.id)
         return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
+
+    @action(methods=['POST'], detail=False)
+    def delete_me(self, request):
+        user = get_object_or_404(User, id=request.user.id)
+        user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(methods=['POST'], detail=False)
     def logout(self, request):
