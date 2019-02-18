@@ -1,8 +1,8 @@
 from django.db import models
 
-from stadium.config.models import Base
-from stadium.users.models import User
-from stadium.repositories.models import Repository
+from scigym.config.models import Base
+from scigym.users.models import User
+from scigym.repositories.models import Repository
 from django.contrib.postgres.fields import ArrayField
 
 

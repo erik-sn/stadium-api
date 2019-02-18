@@ -11,8 +11,8 @@ from django.urls import reverse
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 
-from stadium.utils.errors import GithubException
-from stadium.utils.github import GithubApiClient
+from scigym.utils.errors import GithubException
+from scigym.utils.github import GithubApiClient
 from .models import User
 from .serializers import CreateUserSerializer, UserSerializer
 

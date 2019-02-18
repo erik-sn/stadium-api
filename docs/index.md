@@ -1,9 +1,9 @@
-# stadium-api
+# scigym-api
 
-[![Build Status](https://travis-ci.org/erik-sn/stadium-api.svg?branch=master)](https://travis-ci.org/erik-sn/stadium-api)
+[![Build Status](https://travis-ci.org/hendrikpn/scigym-api.svg?branch=master)](https://travis-ci.org/hendrikpn/scigym-api)
 [![Built with](https://img.shields.io/badge/Built_with-Cookiecutter_Django_Rest-F7B633.svg)](https://github.com/agconti/cookiecutter-django-rest)
 
-Upload your open ai gym environments for people to test/tinker/upload. Check out the project's [documentation](http://erik-sn.github.io/stadium-api/).
+Upload your open ai gym environments for people to test/tinker/upload. Check out the project's [documentation](http://hendrikpn.github.io/scigym-api/).
 
 # Prerequisites
 
@@ -33,26 +33,26 @@ Deployment automated via Travis. When builds pass on the master or qa branch, Tr
 Creating the production sever:
 
 ```
-heroku create stadium-prod --remote prod && \
-    heroku addons:create newrelic:wayne --app stadium-prod && \
-    heroku addons:create heroku-postgresql:hobby-dev --app stadium-prod && \
+heroku create scigym-prod --remote prod && \
+    heroku addons:create newrelic:wayne --app scigym-prod && \
+    heroku addons:create heroku-postgresql:hobby-dev --app scigym-prod && \
     heroku config:set DJANGO_SECRET=`openssl rand -base64 32` \
         DJANGO_AWS_ACCESS_KEY_ID="Add your id" \
         DJANGO_AWS_SECRET_ACCESS_KEY="Add your key" \
-        DJANGO_AWS_STORAGE_BUCKET_NAME="stadium-prod" \
-        --app stadium-prod
+        DJANGO_AWS_STORAGE_BUCKET_NAME="scigym-prod" \
+        --app scigym-prod
 ```
 
 Creating the qa sever:
 
 ```
-heroku create `stadium-qa --remote qa && \
+heroku create `scigym-qa --remote qa && \
     heroku addons:create newrelic:wayne && \
     heroku addons:create heroku-postgresql:hobby-dev && \
     heroku config:set DJANGO_SECRET=`openssl rand -base64 32` \
         DJANGO_AWS_ACCESS_KEY_ID="Add your id" \
         DJANGO_AWS_SECRET_ACCESS_KEY="Add your key" \
-        DJANGO_AWS_STORAGE_BUCKET_NAME="stadium-qa" \
+        DJANGO_AWS_STORAGE_BUCKET_NAME="scigym-qa" \
 ```
 
 Securely add your heroku credentials to travis so it can automatically deploy your changes.

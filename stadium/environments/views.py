@@ -5,7 +5,7 @@ from rest_framework.decorators import action
 
 from rest_framework import viewsets, status
 
-from stadium.repositories.models import Repository
+from scigym.repositories.models import Repository
 from .models import Environment
 from .serializers import (
     EnvironmentSerializer,
