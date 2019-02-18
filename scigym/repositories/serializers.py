@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import Repository
 
-from stadium.users.serializers import UserSerializer
+from scigym.users.serializers import UserSerializer
 
 
 class RepositorySerializer(serializers.ModelSerializer):

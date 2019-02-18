@@ -6,8 +6,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
-from stadium.utils.errors import internal_error, GithubException
-from stadium.utils.github import GithubUtils
+from scigym.utils.errors import internal_error, GithubException
+from scigym.utils.github import GithubUtils
 from .models import Repository
 from .serializers import RepositorySerializer
 

@@ -1,8 +1,8 @@
 from rest_framework import serializers
 from .models import Environment
 
-from stadium.users.serializers import UserSerializer
-from stadium.repositories.serializers import RepositorySerializer
+from scigym.users.serializers import UserSerializer
+from scigym.repositories.serializers import RepositorySerializer
 
 
 class EnvironmentSerializer(serializers.ModelSerializer):

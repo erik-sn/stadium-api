@@ -16,7 +16,7 @@ class Local(Common):
         '--nologcapture',
         '--with-coverage',
         '--with-progressive',
-        '--cover-package=stadium'
+        '--cover-package=scigym'
     ]
 
     MIDDLEWARE = Common.MIDDLEWARE

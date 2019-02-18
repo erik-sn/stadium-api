@@ -8,9 +8,9 @@ from django.shortcuts import get_object_or_404
 from django.conf import settings
 from social_django.models import UserSocialAuth
 
-from stadium.users.models import User
-from stadium.repositories.models import Repository
-from stadium.repositories.utils import initialize_repo_from_json
+from scigym.users.models import User
+from scigym.repositories.models import Repository
+from scigym.repositories.utils import initialize_repo_from_json
 from .errors import GithubException
 
 logger = logging.getLogger('django')

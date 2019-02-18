@@ -1,9 +1,9 @@
 import logging
 from typing import Dict
 
-from stadium.users.models import User
-from stadium.repositories.models import Repository
-from stadium.utils.errors import GithubException
+from scigym.users.models import User
+from scigym.repositories.models import Repository
+from scigym.utils.errors import GithubException
 
 logger = logging.getLogger('django')
 

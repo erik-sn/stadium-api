@@ -1,6 +1,6 @@
-site_name: stadium
+site_name: scigym
 site_description: Upload your open ai gym environments for people to test/tinker/upload
-repo_url: https://github.com/erik-sn/stadium-api
+repo_url: https://github.com/hendrikpn/scigym-api
 site_dir: site
 copyright: Copyright &copy; 2018, <a href="https://github.com/erik-sn">erik-sn</a>.
 dev_addr: 0.0.0.0:8001
