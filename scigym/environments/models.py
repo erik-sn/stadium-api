@@ -16,3 +16,9 @@ class Environment(Base):
     description = models.TextField(blank=True, default='', null=True)
     # image = models.TextField(blank=True, null=True) # TODO add this field
     tags = ArrayField(models.CharField(max_length=50), size=4, null=True)
+    topic = models.ForeignKey('Topic', null=True, on_delete=models.SET_NULL)
+
+class Topic(Base):
+
+    name = models.CharField(max_length=100, unique=True, blank=False)
+    parent_topic = models.ForeignKey('Topic', null=True, on_delete=models.SET_NULL, blank=True)
