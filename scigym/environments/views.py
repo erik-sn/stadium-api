@@ -83,10 +83,11 @@ class EnvironmentViewSet(viewsets.ModelViewSet):
         search_query = query
         for i, term in enumerate(search_terms):
             if not i:
-                search_query = Q(name__icontains=term) | Q(tags__icontains=term)
+                search_query = Q(name__icontains=term) | Q(tags__icontains=term) | Q(topic__name__icontains=term)
             else:
                 search_query |= Q(name__icontains=term)
                 search_query |= Q(tags__icontains=term)
+                search_query |= Q(topic__name__icontains=term)
         query &= search_query
         logger.debug(query)
 
@@ -106,14 +107,11 @@ class EnvironmentViewSet(viewsets.ModelViewSet):
         if len(search_term) == 0:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        # here we look for both the parent topic and the child topic
+        # here we look for both the parent topic and the child topic (UUID)
         search_query = Q(topic__exact=search_term) | Q(topic__parent_topic__exact=search_term)
-        test_query = Q(topic__parent_topic__exact=search_term)
         logger.debug(search_query)
-        logger.info(test_query)
+
         environments = Environment.objects.filter(search_query).select_related('repository')
-        environments_test = Environment.objects.filter(test_query).select_related('repository')
-        logger.info(environments_test)
         serializer = EnvironmentSerializer(environments, many=True)
         data = serializer.data
 
