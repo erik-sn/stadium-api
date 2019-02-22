@@ -3,8 +3,8 @@ import logging
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 
-from stadium.config.models import Base
-from stadium.users.models import User
+from scigym.config.models import Base
+from scigym.users.models import User
 
 
 logger = logging.getLogger('django')

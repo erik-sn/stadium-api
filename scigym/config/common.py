@@ -28,9 +28,9 @@ class Common(Configuration):
         'watchman',
 
         # Your apps
-        'stadium.users',
-        'stadium.repositories',
-        'stadium.environments',
+        'scigym.users',
+        'scigym.repositories',
+        'scigym.environments',
 
     )
 
@@ -47,9 +47,9 @@ class Common(Configuration):
     )
 
     ALLOWED_HOSTS = ["*"]
-    ROOT_URLCONF = 'stadium.urls'
+    ROOT_URLCONF = 'scigym.urls'
     SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
-    WSGI_APPLICATION = 'stadium.wsgi.application'
+    WSGI_APPLICATION = 'scigym.wsgi.application'
 
     # Email
     # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -241,5 +241,5 @@ class Common(Configuration):
     CORS_ORIGIN_WHITELIST = (
         'localhost:3000',
         'localhost:8000',
-        'stadium.local',
+        'scigym.local',
     )

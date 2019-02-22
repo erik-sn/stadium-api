@@ -5,6 +5,6 @@ omit = *migrations*,
        *test*,
        *admin*,
        ./manage.py,
-       ./stadium/config/*,
-       ./stadium/wsgi.py,
+       ./scigym/config/*,
+       ./scigym/wsgi.py,
        *__init__*

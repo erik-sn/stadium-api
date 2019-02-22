@@ -2,7 +2,7 @@ import uuid
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 
-from stadium.users.models import User
+from scigym.users.models import User
 
 
 class Base(models.Model):
