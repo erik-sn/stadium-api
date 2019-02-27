@@ -9,6 +9,8 @@ from .users.views import UserViewSet, UserCreateViewSet
 from .repositories.views import RepositoryViewSet
 from .config.views import app_config
 from .environments.views import EnvironmentViewSet
+from .contributors.views import ContributorViewSet
+from .projectauthors.views import ProjectAuthorViewSet
 
 if settings.DEBUG is True:
     from django.contrib.staticfiles.urls import staticfiles_urlpatterns
@@ -18,6 +20,8 @@ router.register('users', UserViewSet)
 router.register('users', UserCreateViewSet)
 router.register('repositories', RepositoryViewSet)
 router.register('environments', EnvironmentViewSet)
+router.register('contributors', ContributorViewSet)
+router.register('projectauthors', ProjectAuthorViewSet)
 
 urlpatterns = [
     path('api/admin/', admin.site.urls),

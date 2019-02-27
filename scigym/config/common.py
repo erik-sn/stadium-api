@@ -31,7 +31,8 @@ class Common(Configuration):
         'scigym.users',
         'scigym.repositories',
         'scigym.environments',
-
+        'scigym.contributors',
+        'scigym.projectauthors',
     )
 
     # https://docs.djangoproject.com/en/2.0/topics/http/middleware/

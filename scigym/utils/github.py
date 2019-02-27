@@ -11,6 +11,7 @@ from social_django.models import UserSocialAuth
 from scigym.users.models import User
 from scigym.repositories.models import Repository
 from scigym.repositories.utils import initialize_repo_from_json
+from scigym.contributors.utils import initialize_contributor_from_json
 from .errors import GithubException
 
 logger = logging.getLogger('django')
@@ -53,6 +54,30 @@ class GithubApiClient:
             'redirect_uri': settings.SOCIAL_AUTH_GITHUB_CALLBACK,
             'state': state,
         }, headers=self.headers)
+
+    def create_or_refresh_contributors(self):
+        REPO_URL_LIST = [
+            '/repos/hendrikpn/scigym/stats/contributors',
+            '/repos/hendrikpn/scigym-web/stats/contributors', 
+            '/repos/hendrikpn/scigym-api/stats/contributors'
+        ]
+
+        contributors_list = []
+        for url in REPO_URL_LIST:
+            logger.info(f'Searching for contributors at {url}')
+            response = requests.get(self.BASE_URL+url, headers=self.headers)
+            if response.ok:
+                contributors = response.json()
+            else:
+                raise GithubException('Failed to retrieve contributors')
+            for contribution in contributors:
+                author = contribution['author']
+                contributors_list.append(author)
+        
+        return [initialize_contributor_from_json(author) for author in contributors_list]
+
+
+
 
 
 class GithubUtils:
@@ -118,7 +143,7 @@ class GithubUtils:
         dependencies = getattr(getattr(kwarg, 'value'), 'elts')
         for dependency in dependencies:
             package_name = getattr(dependency, 's')  # I don't know why this is "s"!
-            if 'gym' in package_name or 'scigym' in package_name:  # TODO this is too naive, need to find a way to limit this to explicity gym
+            if 'gym' in package_name:  # TODO this is too naive, need to find a way to limit this to explicity gym
                 return True
         return False
 
