@@ -79,19 +79,16 @@ class EnvironmentViewSet(viewsets.ModelViewSet):
         if len(search_terms) == 0:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        query = Q(name__isnull=False)  # initialize the query with a condition we always know is true
-        search_query = query
         for i, term in enumerate(search_terms):
-            if not i:
+            if i == 0:
                 search_query = Q(name__icontains=term) | Q(tags__icontains=term) | Q(topic__name__icontains=term)
             else:
                 search_query |= Q(name__icontains=term)
                 search_query |= Q(tags__icontains=term)
                 search_query |= Q(topic__name__icontains=term)
-        query &= search_query
-        logger.debug(query)
+        logger.debug(search_query)
 
-        environments = Environment.objects.filter(query).select_related('repository')
+        environments = Environment.objects.filter(search_query).select_related('repository')
 
         serializer = EnvironmentSerializer(environments, many=True)
         data = serializer.data
