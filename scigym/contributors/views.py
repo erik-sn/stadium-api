@@ -24,7 +24,6 @@ class ContributorViewSet(viewsets.ModelViewSet):
     @action(['POST'], detail=False)
     def find_contributors(self, request):
         try:
-            logger.info('Searching for contributors')
             contributors = GithubApiClient(None).create_or_refresh_contributors()
             return Response(ContributorSerializer(contributors, many=True).data, status=status.HTTP_201_CREATED)
         except GithubException:

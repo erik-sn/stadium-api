@@ -19,8 +19,11 @@ class Contributor(Base):
     login = models.CharField(max_length=256)  # TODO what is the actual max length?
     html_url = models.URLField()
     avatar_url = models.URLField()
+    contributions = models.PositiveIntegerField()
 
     # fields not based on github API
     # contributed_to = models.CharField(choices=CONTRIBUTION_CHOICES) # maybe separate web and package in the future
 
-
+    class Meta:
+        abstract = False
+        ordering = ('-contributions',)
