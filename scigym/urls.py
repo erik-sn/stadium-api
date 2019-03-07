@@ -9,6 +9,7 @@ from .users.views import UserViewSet, UserCreateViewSet
 from .repositories.views import RepositoryViewSet
 from .config.views import app_config
 from .environments.views import EnvironmentViewSet, TopicViewSet
+from .images.views import ImageViewSet, ImageUploadEventViewSet
 
 if settings.DEBUG is True:
     from django.contrib.staticfiles.urls import staticfiles_urlpatterns
@@ -19,6 +20,8 @@ router.register('users', UserCreateViewSet)
 router.register('repositories', RepositoryViewSet)
 router.register('environments', EnvironmentViewSet)
 router.register('topics', TopicViewSet)
+router.register('images', ImageViewSet)
+router.register('image_upload_events', ImageUploadEventViewSet)
 
 urlpatterns = [
     path('api/admin/', admin.site.urls),
