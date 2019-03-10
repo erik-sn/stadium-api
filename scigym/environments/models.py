@@ -17,16 +17,7 @@ class Environment(Base):
     description = models.TextField(blank=True, default='', null=True)
     tags = ArrayField(models.CharField(max_length=50), size=4, null=True)
     topic = models.ForeignKey('Topic', null=True, on_delete=models.SET_NULL)
-
-    # TODO: avatar: ManyToMany
-    #       environment delete method, should also delete the images
-    ##       maybe the ForeignKey should be on the image model
-    ##       advantage: `on_delete=models.CASCADE`
-    #       change: UPLOADED_STATIC_FILES, SAVED_IMAGES,
-    #       change in image upload: last updated so that frontend gets the most up-to-date 
-    #       special case: twice the same image -> hash should involve environmentID
-    #       rename Image model to avatar, and save to avatar file system
-    avatar = models.ManyToManyField(Image) 
+    current_avatar = models.ForeignKey(Image, null=True, on_delete=models.SET_NULL)
 
 class Topic(Base):
 
