@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from oauth2_provider.models import Application
+from .models import ImageConfig
 
 
 @api_view(['GET'])
@@ -14,3 +15,8 @@ def app_config(request):
         'app_client_id': application.client_id
     }
     return Response(config, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def image_config(request):
+    config = ImageConfig.objects.all()
+    return Response(config[0].valid_image_formats, status=status.HTTP_200_OK)

@@ -6,7 +6,7 @@ from rest_framework.decorators import action
 from rest_framework import viewsets, status
 
 from scigym.repositories.models import Repository
-from .models import Environment, Topic
+from .models import Environment, Topic, Image
 from .serializers import (
     EnvironmentSerializer,
     EnvironmentWriteSerializer,
@@ -32,11 +32,18 @@ class EnvironmentViewSet(viewsets.ModelViewSet):
         return EnvironmentWriteSerializer if self.request.method in WRITE_VERBS else self.serializer_class
 
     def create(self, request):
+
+        # get image
+        if is_valid_uuid(request.data['avatar']):
+            avatar = Image.objects.get(id=request.data['avatar'])
+        else:
+            avatar = None
         env = Environment.objects.create(
             name=request.data['name'],
             description=request.data['description'],
             repository=Repository.objects.get(id=request.data['repository']),
-            tags=request.data['tags']
+            tags=request.data['tags'],
+            current_avatar=avatar
         )
 
         if is_valid_uuid(request.data['topic']):
@@ -46,25 +53,23 @@ class EnvironmentViewSet(viewsets.ModelViewSet):
 
         serializer = EnvironmentWriteSerializer(env)
         return Response(serializer.data, status=201)
-
-    def delete(self, request, pk):
-        '''
-        Doesn't do anything
-        '''
-        env =  get_object_or_404(Environment, pk=pk)
-        env.delete()
-        return(Response(status=status.HTTP_204_NO_CONTENT))
     
     def update(self, request, pk):
         env =  get_object_or_404(Environment, pk=pk)
         env.name = request.data['name']
         env.description = request.data['description']
         env.tags = request.data['tags']
+        logger.info(request.data)
         if is_valid_uuid(request.data['topic']):
             logger.info('valid UUID for topic')
             env.topic = Topic.objects.get(id=request.data['topic'])
         else:
             env.topic = None
+        if is_valid_uuid(request.data['avatar_id']):
+            logger.info('valid UUID for avatar')
+            env.current_avatar = Image.objects.get(id=request.data['avatar_id'])
+        else:
+            env.current_avatar = None
         env.save()
         serializer = EnvironmentWriteSerializer(env)
         return(Response(serializer.data, status=200))

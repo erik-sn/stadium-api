@@ -5,7 +5,6 @@ import dj_database_url
 from configurations import Configuration
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 class Common(Configuration):
 
     INSTALLED_APPS = (
@@ -31,6 +30,8 @@ class Common(Configuration):
         'scigym.users',
         'scigym.repositories',
         'scigym.environments',
+        'scigym.images',
+        'scigym.config',
 
     )
 
@@ -87,8 +88,10 @@ class Common(Configuration):
     # https://docs.djangoproject.com/en/2.0/howto/static-files/
     STATIC_ROOT = os.path.normpath(join(os.path.dirname(BASE_DIR), 'static/django'))
     STATIC_FILES = os.path.normpath(join(os.path.dirname(BASE_DIR), 'static'))
+    UPLOADED_STATIC_FILES = os.path.normpath(join(os.path.dirname(BASE_DIR), 'files'))
     STATICFILES_DIRS = [
         STATIC_FILES,
+        UPLOADED_STATIC_FILES,
     ]
     STATIC_URL = '/static/'
     STATICFILES_FINDERS = (
