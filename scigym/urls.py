@@ -7,8 +7,9 @@ from rest_framework.routers import DefaultRouter
 
 from .users.views import UserViewSet, UserCreateViewSet
 from .repositories.views import RepositoryViewSet
-from .config.views import app_config
+from .config.views import app_config, image_config
 from .environments.views import EnvironmentViewSet, TopicViewSet
+from .images.views import ImageViewSet
 
 if settings.DEBUG is True:
     from django.contrib.staticfiles.urls import staticfiles_urlpatterns
@@ -19,12 +20,14 @@ router.register('users', UserCreateViewSet)
 router.register('repositories', RepositoryViewSet)
 router.register('environments', EnvironmentViewSet)
 router.register('topics', TopicViewSet)
+router.register('images', ImageViewSet)
 
 urlpatterns = [
     path('api/admin/', admin.site.urls),
     path('api/watchman/', include('watchman.urls')),
     path('api/v1/auth/', include('rest_framework_social_oauth2.urls')),
     path('api/v1/app_config/', app_config),
+    path('api/v1/image_config/', image_config),
     path('api/v1/', include(router.urls)),
 
     # the 'api-root' from django rest-frameworks default router
