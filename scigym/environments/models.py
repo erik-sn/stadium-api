@@ -13,7 +13,7 @@ class Environment(Base):
 
     # new as compared to repo model
     
-    name = models.CharField(max_length=256) # TODO what is the actual max length?
+    name = models.CharField(max_length=256, unique=True) # TODO what is the actual max length?
     description = models.TextField(blank=True, default='', null=True)
     scigym = models.BooleanField(default=False) # only we can edit this field
     tags = ArrayField(models.CharField(max_length=50), size=4, null=True)

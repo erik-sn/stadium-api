@@ -1,4 +1,5 @@
 import logging
+import re
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
@@ -38,8 +39,10 @@ class EnvironmentViewSet(viewsets.ModelViewSet):
             avatar = Image.objects.get(id=request.data['avatar'])
         else:
             avatar = None
+        env_name = request.data['name']
+        env_name = re.sub(' {2,}', '-', env_name)
         env = Environment.objects.create(
-            name=request.data['name'],
+            name=env_name,
             description=request.data['description'],
             repository=Repository.objects.get(id=request.data['repository']),
             tags=request.data['tags'],
@@ -56,7 +59,9 @@ class EnvironmentViewSet(viewsets.ModelViewSet):
     
     def update(self, request, pk):
         env =  get_object_or_404(Environment, pk=pk)
-        env.name = request.data['name']
+        env_name = request.data['name']
+        env_name = re.sub(' {2,}', '-', env_name)
+        env.name = env_name
         env.description = request.data['description']
         env.tags = request.data['tags']
         logger.info(request.data)
