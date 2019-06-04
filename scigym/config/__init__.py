@@ -9,3 +9,4 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SAVED_IMAGES = os.path.join(BASE_DIR, '/code/files', 'images')
 # if not os.path.exists(SAVED_IMAGES):
 #     os.makedirs(SAVED_IMAGES)
+# ok please
