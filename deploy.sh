@@ -1,11 +1,13 @@
-rm -rf stadium/config/static/config/css
-rm -rf stadium/config/static/config/js
-# rm stadium/config/templates/config/index.html
+sudo rm -rf static/django
+rm -rf static/css
+rm -rf static/js
+rm -rf static/media
+rm scigym/config/templates/config/index.html
 
-cd ../stadium-web
+cd ../scigym-web
 npm run build
 
-cp -r ./build/static/* ../stadium-api/stadium/config/static/config
-cp ./build/index.html ../stadium-api/stadium/config/templates/config/
+cp -r ./build/static/* ../scigym-api/static
+cp ./build/index.html ../scigym-api/scigym/config/templates/config/
 
 cd ../stadium-api
