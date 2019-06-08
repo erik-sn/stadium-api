@@ -40,6 +40,7 @@ class EnvironmentViewSet(viewsets.ModelViewSet):
         else:
             avatar = None
         env_name = request.data['name']
+        # convert spaces to dashes. TODO: Prohibit special characters in the name?
         env_name = re.sub(' {2,}', '-', env_name)
         env = Environment.objects.create(
             name=env_name,
