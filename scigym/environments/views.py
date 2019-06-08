@@ -12,7 +12,9 @@ from .serializers import (
     EnvironmentWriteSerializer,
     TopicSerializer
 )
-from .permissions import IsOwnerOrReadOnly, IsAdminOrReadOnly
+
+from scigym.config.permissions import IsAdminOrReadOnly
+from .permissions import IsOwnerOrReadOnly
 from scigym.utils.helper import is_valid_uuid
 
 logger = logging.getLogger('django')
