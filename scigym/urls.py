@@ -10,7 +10,6 @@ from .repositories.views import RepositoryViewSet
 from .config.views import app_config, image_config
 from .environments.views import EnvironmentViewSet, TopicViewSet
 from .contributors.views import ContributorViewSet
-from .projectauthors.views import ProjectAuthorViewSet
 from .images.views import ImageViewSet
 
 if settings.DEBUG is True:
@@ -22,7 +21,6 @@ router.register('users', UserCreateViewSet)
 router.register('repositories', RepositoryViewSet)
 router.register('environments', EnvironmentViewSet)
 router.register('contributors', ContributorViewSet)
-router.register('projectauthors', ProjectAuthorViewSet)
 router.register('topics', TopicViewSet)
 router.register('images', ImageViewSet)
 

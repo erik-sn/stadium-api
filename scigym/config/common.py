@@ -31,7 +31,6 @@ class Common(Configuration):
         'scigym.repositories',
         'scigym.environments',
         'scigym.contributors',
-        'scigym.projectauthors',
         'scigym.images',
         'scigym.config',
     )
