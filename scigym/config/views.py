@@ -7,7 +7,7 @@ from oauth2_provider.models import Application
 from .models import ImageConfig
 
 
-def index(request):
+def index(request, resource):
     return render_to_response('config/index.html')
 
 

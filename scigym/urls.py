@@ -40,5 +40,6 @@ if settings.DEBUG is True:
     urlpatterns += staticfiles_urlpatterns()
 
 urlpatterns += [
-    path('', index),
+    path('', index, {'resource': ''}),
+    path('<path:resource>', index)
 ]
