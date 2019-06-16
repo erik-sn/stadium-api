@@ -7,7 +7,7 @@ from rest_framework.routers import DefaultRouter
 
 from .users.views import UserViewSet, UserCreateViewSet
 from .repositories.views import RepositoryViewSet
-from .config.views import app_config, image_config
+from .config.views import app_config, image_config, index
 from .environments.views import EnvironmentViewSet, TopicViewSet
 from .contributors.views import ContributorViewSet
 from .images.views import ImageViewSet
@@ -40,3 +40,8 @@ urlpatterns = [
 
 if settings.DEBUG is True:
     urlpatterns += staticfiles_urlpatterns()
+
+urlpatterns += [
+    path('', index, {'resource': ''}),
+    path('<path:resource>', index)
+]
