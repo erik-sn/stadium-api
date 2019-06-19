@@ -18,6 +18,7 @@ from shutil import copyfile, rmtree
 logger = logging.getLogger('django')
 
 SAVED_IMAGES = settings.SAVED_IMAGES
+UPLOADED_STATIC_FILES = settings.UPLOADED_STATIC_FILES
 
 def save_image(uploaded_file: InMemoryUploadedFile, user) -> Image:
     """process requested file
@@ -50,6 +51,9 @@ def save_image(uploaded_file: InMemoryUploadedFile, user) -> Image:
     # create unique path to save file to
     uuid_name = f'{uuid.uuid4()}{file_extension}'
     save_path = os.path.join(SAVED_IMAGES, uuid_name)
+    logger.info(f'Saving image at {save_path}')
+    upload_path = '/'+os.path.relpath(save_path, UPLOADED_STATIC_FILES)
+    logger.info(f'Image can be found at /static{upload_path}')
 
     # write file to path
     with open(save_path, 'wb+') as destination:
@@ -60,6 +64,7 @@ def save_image(uploaded_file: InMemoryUploadedFile, user) -> Image:
     return Image.objects.create(
         name=file_name,
         file_path=save_path,
+        upload_path=upload_path,
         owner=user,
     )
 
