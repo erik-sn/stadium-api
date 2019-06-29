@@ -89,7 +89,7 @@ class Common(Configuration):
     # https://docs.djangoproject.com/en/2.0/howto/static-files/
     STATIC_ROOT = os.path.normpath(join(os.path.dirname(BASE_DIR), 'static/django'))
     STATIC_FILES = os.path.normpath(join(os.path.dirname(BASE_DIR), 'static'))
-    UPLOADED_STATIC_FILES = os.path.normpath(join(os.path.dirname(BASE_DIR), 'files'))
+    UPLOADED_STATIC_FILES = os.path.normpath(join(os.path.dirname(BASE_DIR), 'scigym/files'))
     STATICFILES_DIRS = [
         STATIC_FILES,
         UPLOADED_STATIC_FILES,
