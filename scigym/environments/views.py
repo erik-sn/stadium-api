@@ -3,6 +3,7 @@ import re
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
+from rest_framework.exceptions import ValidationError
 
 from rest_framework import viewsets, status
 
@@ -11,6 +12,7 @@ from .models import Environment, Topic, Image
 from .serializers import (
     EnvironmentSerializer,
     EnvironmentWriteSerializer,
+    EnvironmentFormSerializer,
     TopicSerializer
 )
 
@@ -44,43 +46,69 @@ class EnvironmentViewSet(viewsets.ModelViewSet):
         env_name = request.data['name']
         # convert spaces to dashes. TODO: Prohibit special characters in the name?
         env_name = re.sub(' {2,}', '-', env_name)
-        env = Environment.objects.create(
-            name=env_name,
-            description=request.data['description'],
-            repository=Repository.objects.get(id=request.data['repository']),
-            tags=request.data['tags'],
-            current_avatar=avatar
-        )
+        env_data = {
+            'name': env_name,
+            'description': request.data['description'],
+            'tags': request.data['tags'],
+            'current_avatar': avatar
+        }
+        serializer = EnvironmentFormSerializer(data=env_data)
+        if serializer.is_valid(raise_exception=False):
+            env = Environment.objects.create(
+                name=env_data['name'],
+                description=env_data['description'],
+                repository=Repository.objects.get(id=request.data['repository']),
+                tags=env_data['tags'],
+                current_avatar=env_data['current_avatar']
+            )
 
-        if is_valid_uuid(request.data['topic']):
-            logger.info('valid UUID for topic')
-            env.topic= Topic.objects.get(id=request.data['topic'])
-            env.save()
+            if is_valid_uuid(request.data['topic']):
+                logger.info('valid UUID for topic')
+                env.topic= Topic.objects.get(id=request.data['topic'])
+                env.save()
 
-        serializer = EnvironmentWriteSerializer(env)
-        return Response(serializer.data, status=201)
+            serializer = EnvironmentWriteSerializer(env)
+            return Response(serializer.data, status=201)
+        else:
+            logger.info(serializer.errors)
+            raise ValidationError(serializer.errors)
     
     def update(self, request, pk):
         env =  get_object_or_404(Environment, pk=pk)
         env_name = request.data['name']
         env_name = re.sub(' {2,}', '-', env_name)
-        env.name = env_name
-        env.description = request.data['description']
-        env.tags = request.data['tags']
-        logger.info(request.data)
+
+        env_data = {
+            'name': env_name,
+            'description': request.data['description'],
+            'tags': request.data['tags'],
+        }
+
         if is_valid_uuid(request.data['topic']):
             logger.info('valid UUID for topic')
-            env.topic = Topic.objects.get(id=request.data['topic'])
+            env_data['topic'] = Topic.objects.get(id=request.data['topic'])
         else:
-            env.topic = None
+            env_data['topic'] = None
+
         if is_valid_uuid(request.data['avatar_id']):
             logger.info('valid UUID for avatar')
-            env.current_avatar = Image.objects.get(id=request.data['avatar_id'])
+            env_data['current_avatar'] = Image.objects.get(id=request.data['avatar_id'])
         else:
-            env.current_avatar = None
-        env.save()
-        serializer = EnvironmentWriteSerializer(env)
-        return(Response(serializer.data, status=200))
+            env_data['current_avatar'] = None
+
+        serializer = EnvironmentFormSerializer(data=env_data)
+        if serializer.is_valid_form(raise_exception=False):
+            env.name = env_data['name']
+            env.description = env_data['description']
+            env.tags = env_data['tags']
+            env.topic = env_data['topic']
+            env.current_avatar = env_data['current_avatar']
+
+            env.save()
+            serializer = EnvironmentWriteSerializer(env)
+            return(Response(serializer.data, status=200))
+        else:
+            raise ValidationError(serializer.errors)
 
 
     @action(['GET'], detail=False)
