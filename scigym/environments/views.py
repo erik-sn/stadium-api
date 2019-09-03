@@ -52,8 +52,8 @@ class EnvironmentViewSet(viewsets.ModelViewSet):
             'tags': request.data['tags'],
             'current_avatar': avatar
         }
-        serializer = EnvironmentFormSerializer(data=env_data)
-        if serializer.is_valid(raise_exception=False):
+        serializer = EnvironmentWriteSerializer(data=env_data)
+        if serializer.is_valid(raise_exception=True):
             env = Environment.objects.create(
                 name=env_data['name'],
                 description=env_data['description'],
@@ -67,11 +67,7 @@ class EnvironmentViewSet(viewsets.ModelViewSet):
                 env.topic= Topic.objects.get(id=request.data['topic'])
                 env.save()
 
-            serializer = EnvironmentWriteSerializer(env)
             return Response(serializer.data, status=201)
-        else:
-            logger.info(serializer.errors)
-            raise ValidationError(serializer.errors)
     
     def update(self, request, pk):
         env =  get_object_or_404(Environment, pk=pk)
@@ -96,20 +92,11 @@ class EnvironmentViewSet(viewsets.ModelViewSet):
         else:
             env_data['current_avatar'] = None
 
-        serializer = EnvironmentFormSerializer(data=env_data)
-        if serializer.is_valid_form(raise_exception=False):
-            env.name = env_data['name']
-            env.description = env_data['description']
-            env.tags = env_data['tags']
-            env.topic = env_data['topic']
-            env.current_avatar = env_data['current_avatar']
+        serializer = EnvironmentFormSerializer(env, data=env_data)
+        if serializer.is_valid(raise_exception=True):
 
-            env.save()
-            serializer = EnvironmentWriteSerializer(env)
+            serializer.save()
             return(Response(serializer.data, status=200))
-        else:
-            raise ValidationError(serializer.errors)
-
 
     @action(['GET'], detail=False)
     def filter(self, request):
