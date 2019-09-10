@@ -4,7 +4,7 @@ SciGym also exists as a library on [github](https://github.com/hendrikpn/scigym)
 Some environments might be independent python packages, but let us start there.
 Installing the `scigym` library is easy:
 
-    pip install --user scigym
+    pip install scigym
 
 Now you have `scigym` and some of the environments you can find here, all packaged in a neat python module.
 However, before you can start tackling all the science problems we have to offer, you need to understand reinforcement learning (RL) in general, and `scigym` specifically.
@@ -47,9 +47,9 @@ Here, we present a typical round of interactions between a random agent and an e
 
     This already provides us will all the necessary features of `gym`.
 
-3.  Now let us select an environment from scigym which we want to explore. How about, `surfacecode-decoding`?
+3.  Now let us select an environment from scigym which we want to explore. How about, `surfacecode-decoding`? 
     You don't know how it works, or what it is? Well, this is a rather nice feature of RL: you don't need to! Instead, consider the environment as a black box that responses to your actions in some way.
-    So, let's get this environment (requires [tensorflow](https://www.tensorflow.org/) and [keras](https://keras.io/)):
+    So, let's get this environment (Note that this environment requires some extra dependencies which you can easily install via `pip install scigym.['surfacecode-decoding']`):
 
         ```python
         env = scigym.make('surfacecode-decoding-v0')
