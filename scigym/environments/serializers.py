@@ -1,10 +1,13 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError, _get_error_details
 from .models import Environment, Topic
+import logging
 
 from scigym.users.serializers import UserSerializer
 from scigym.repositories.serializers import RepositorySerializer
 from scigym.images.serializers import ImageSerializer
 
+logger = logging.getLogger('django')
 
 class TopicSerializer(serializers.ModelSerializer):
 
@@ -30,3 +33,10 @@ class EnvironmentWriteSerializer(serializers.ModelSerializer):
         model = Environment
         depth = 1
         fields = ('id', 'name', 'description', 'repository', 'tags', 'topic', 'current_avatar')
+
+class EnvironmentFormSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Environment
+        depth = 1
+        fields = ('id', 'name', 'description', 'tags', 'topic', 'current_avatar')
