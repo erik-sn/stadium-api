@@ -1,7 +1,7 @@
 import logging
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, AllowAny
 from rest_framework import viewsets, status
 
@@ -41,8 +41,6 @@ class MessageBoardViewSet(viewsets.ModelViewSet):
         if serializer.is_valid(raise_exception=True):
             author = get_object_or_404(User, id=request.user.id)
             env = get_object_or_404(Environment, id=request.data['environment'])
-            logger.info(env)
-            logger.info(author)
             board = MessageBoard.objects.create(
                 title=board_data['title'],
                 description=board_data['description'],
@@ -54,3 +52,26 @@ class MessageBoardViewSet(viewsets.ModelViewSet):
             board.save()
 
             return Response(serializer.data, status=201)
+
+class CommentViewSet(viewsets.ModelViewSet):
+    """
+    View to create Comments
+    """
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+    @action(['GET'], detail=False)
+    def count_comments(self, request):
+        messageboards = MessageBoard.objects.all()
+        data = {}
+        for board in messageboards:
+            comments = Comment.objects.filter(board=board.id)
+            data[str(board.id)] = len(comments)
+        return Response(data, status=status.HTTP_200_OK)
+    
+    @action(['GET'], detail=False)
+    def board_comments(self, request):
+        board_id = request.GET.get('messageboard', '')
+        comments = Comment.objects.filter(board=board_id)
+        return Response(comments, status=status.HTTP_200_OK)

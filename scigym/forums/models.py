@@ -15,7 +15,7 @@ class MessageBoard(Base):
     description = models.TextField(max_length=30000) # TODO: can this be markdown style? or at least the stackoverflow style?
     # num_comments = models.PositiveSmallIntegerField(default=0, blank=True, null=True)
     # upvotes = models.PositiveSmallIntegerField(default=0, blank=True, null=True) # this should be a class because of user assoc
-    tags = ArrayField(models.CharField(max_length=50), size=4, null=True)
+    tags = ArrayField(models.CharField(max_length=50), size=3, null=True)
     environment = models.ForeignKey(Environment, on_delete=models.CASCADE, null=True)
 
 class Comment(Base):
