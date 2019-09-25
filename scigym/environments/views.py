@@ -44,7 +44,7 @@ class EnvironmentViewSet(viewsets.ModelViewSet):
             avatar = None
         env_name = request.data['name']
         # convert spaces to dashes. TODO: Prohibit special characters in the name?
-        env_name = re.sub(' {2,}', '-', env_name)
+        env_name = re.sub(' {1,}', '-', env_name)
         env_data = {
             'name': env_name,
             'description': request.data['description'],
@@ -71,7 +71,7 @@ class EnvironmentViewSet(viewsets.ModelViewSet):
     def update(self, request, pk):
         env =  get_object_or_404(Environment, pk=pk)
         env_name = request.data['name']
-        env_name = re.sub(' {2,}', '-', env_name)
+        env_name = re.sub(' {1,}', '-', env_name)
 
         env_data = {
             'name': env_name,

@@ -1,4 +1,5 @@
 import logging
+import re
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action, api_view
@@ -30,9 +31,13 @@ class MessageBoardViewSet(viewsets.ModelViewSet):
         return MessageBoardWriteSerializer if self.request.method in WRITE_VERBS else self.serializer_class
     
     def create(self, request, *args, **kwargs):
+        board_title = request.data['title_url']
+        # convert spaces to dashes.
+        board_title = re.sub(' {1,}', '-', board_title)
 
         board_data = {
             'title': request.data['title'],
+            'title_url': board_title,
             'description': request.data['description'],
             'tags': request.data['tags']
         }
@@ -43,6 +48,7 @@ class MessageBoardViewSet(viewsets.ModelViewSet):
             env = get_object_or_404(Environment, id=request.data['environment'])
             board = MessageBoard.objects.create(
                 title=board_data['title'],
+                title_url=board_data['title_url'],
                 description=board_data['description'],
                 tags=board_data['tags'],
                 author=author,
@@ -53,6 +59,26 @@ class MessageBoardViewSet(viewsets.ModelViewSet):
 
             return Response(serializer.data, status=201)
 
+    def update(self, request, pk):
+        board =  get_object_or_404(MessageBoard, pk=pk)
+        board_title = request.data['title_url']
+        # convert spaces to dashes.
+        board_title = re.sub(' {1,}', '-', board_title)
+
+        board_data = {
+            'title': request.data['title'],
+            'title_url': board_title,
+            'description': request.data['description'],
+            'tags': request.data['tags']
+        }
+
+        serializer = MessageBoardSerializer(board, data=board_data)
+
+        if serializer.is_valid(raise_exception=True):
+
+            serializer.save()
+            return(Response(serializer.data, status=200))
+
 class CommentViewSet(viewsets.ModelViewSet):
     """
     View to create Comments
@@ -60,6 +86,40 @@ class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
+
+    def create(self, request, *args, **kwargs):
+        comment_data = {
+            'comment': request.data['comment'],
+        }
+
+        serializer = CommentSerializer(data=comment_data)
+        if serializer.is_valid(raise_exception=True):
+            author = get_object_or_404(User, id=request.user.id)
+            messageboard = get_object_or_404(MessageBoard, id=request.data['messageboard'])
+            logger.info(messageboard)
+            comment = Comment.objects.create(
+                comment=comment_data['comment'],
+                author=author,
+                board=messageboard
+            )
+
+            comment.save()
+
+            return Response(serializer.data, status=201)
+
+    def update(self, request, pk):
+        comment =  get_object_or_404(Comment, pk=pk)
+
+        comment_data = {
+            'comment': request.data['comment'],
+        }
+
+        serializer = CommentSerializer(comment, data=comment_data)
+
+        if serializer.is_valid(raise_exception=True):
+
+            serializer.save()
+            return(Response(serializer.data, status=200))
 
     @action(['GET'], detail=False)
     def count_comments(self, request):
@@ -74,4 +134,5 @@ class CommentViewSet(viewsets.ModelViewSet):
     def board_comments(self, request):
         board_id = request.GET.get('messageboard', '')
         comments = Comment.objects.filter(board=board_id)
-        return Response(comments, status=status.HTTP_200_OK)
+        serializer = CommentSerializer(comments, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

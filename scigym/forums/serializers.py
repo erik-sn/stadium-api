@@ -18,7 +18,7 @@ class MessageBoardSerializer(serializers.ModelSerializer):
     class Meta:
         model = MessageBoard
         depth = 1
-        fields = ('id', 'title', 'author', 'environment', 'description', 'tags')
+        fields = '__all__'
 
 
 class MessageBoardWriteSerializer(serializers.ModelSerializer):

@@ -10,6 +10,7 @@ class MessageBoard(Base):
     # Each environment has many Commentary Boards where people can ask questions or comment on the environment.
     # Environments will receive board key.
     title = models.CharField(max_length=50, unique=True)
+    title_url = models.CharField(max_length=50, unique=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     # admin = models.ManyToMany(User, on_delete=models.SET_NULL) # TODO: this is the environment owner # is this redundant?
     description = models.TextField(max_length=30000) # TODO: can this be markdown style? or at least the stackoverflow style?
@@ -21,6 +22,6 @@ class MessageBoard(Base):
 class Comment(Base):
     comment = models.TextField(max_length=30000) # TODO: can this be markdown style? or at least the stackoverflow style?
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    board = models.ForeignKey('MessageBoard', on_delete=models.CASCADE)
+    board = models.ForeignKey('MessageBoard', on_delete=models.CASCADE, null=True)
     # upvotes = models.PositiveSmallIntegerField(default=0, blank=True, null=True)
     # children = models.ManyToMany('Comment', null=True, on_delete=models.SET_NULL, blank=True)
