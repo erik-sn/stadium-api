@@ -43,10 +43,11 @@ class EnvironmentViewSet(viewsets.ModelViewSet):
         else:
             avatar = None
         env_name = request.data['name']
-        # convert spaces to dashes. TODO: Prohibit special characters in the name?
-        env_name = re.sub(' {1,}', '-', env_name)
+        env_url = re.sub(' {1,}', '-', env_name)
+
         env_data = {
             'name': env_name,
+            'url': env_url,
             'description': request.data['description'],
             'tags': request.data['tags'],
             'current_avatar': avatar
@@ -55,6 +56,7 @@ class EnvironmentViewSet(viewsets.ModelViewSet):
         if serializer.is_valid(raise_exception=True):
             env = Environment.objects.create(
                 name=env_data['name'],
+                url=env_data['url'],
                 description=env_data['description'],
                 repository=Repository.objects.get(id=request.data['repository']),
                 tags=env_data['tags'],
@@ -71,10 +73,11 @@ class EnvironmentViewSet(viewsets.ModelViewSet):
     def update(self, request, pk):
         env =  get_object_or_404(Environment, pk=pk)
         env_name = request.data['name']
-        env_name = re.sub(' {1,}', '-', env_name)
+        env_url = re.sub(' {1,}', '-', env_name)
 
         env_data = {
             'name': env_name,
+            'url': env_url,
             'description': request.data['description'],
             'tags': request.data['tags'],
         }

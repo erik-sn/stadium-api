@@ -31,13 +31,16 @@ class MessageBoardViewSet(viewsets.ModelViewSet):
         return MessageBoardWriteSerializer if self.request.method in WRITE_VERBS else self.serializer_class
     
     def create(self, request, *args, **kwargs):
-        board_title = request.data['title_url']
+        board_title = request.data['title']
         # convert spaces to dashes.
-        board_title = re.sub(' {1,}', '-', board_title)
+        board_title_url = re.sub(' {1,}', '-', board_title).replace('?', '%3F')
+        env = get_object_or_404(Environment, id=request.data['environment'])
+        # add full url
+        board_title_url = '/env/'+env.url+'/forum/'+board_title_url
 
         board_data = {
-            'title': request.data['title'],
-            'title_url': board_title,
+            'title': board_title,
+            'title_url': board_title_url,
             'description': request.data['description'],
             'tags': request.data['tags']
         }
@@ -45,7 +48,6 @@ class MessageBoardViewSet(viewsets.ModelViewSet):
         serializer = MessageBoardWriteSerializer(data=board_data)
         if serializer.is_valid(raise_exception=True):
             author = get_object_or_404(User, id=request.user.id)
-            env = get_object_or_404(Environment, id=request.data['environment'])
             board = MessageBoard.objects.create(
                 title=board_data['title'],
                 title_url=board_data['title_url'],
@@ -61,13 +63,15 @@ class MessageBoardViewSet(viewsets.ModelViewSet):
 
     def update(self, request, pk):
         board =  get_object_or_404(MessageBoard, pk=pk)
-        board_title = request.data['title_url']
+        board_title = request.data['title']
         # convert spaces to dashes.
-        board_title = re.sub(' {1,}', '-', board_title)
+        board_title_url = re.sub(' {1,}', '-', board_title)
+        # add full url
+        board_title_url = '/env/'+board.environment.url+'/forum/'+board_title_url
 
         board_data = {
-            'title': request.data['title'],
-            'title_url': board_title,
+            'title': board_title,
+            'title_url': board_title_url,
             'description': request.data['description'],
             'tags': request.data['tags']
         }

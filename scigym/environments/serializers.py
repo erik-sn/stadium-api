@@ -24,7 +24,7 @@ class EnvironmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Environment
         depth = 1
-        fields = ('id', 'name', 'description', 'scigym', 'repository', 'tags', 'topic', 'current_avatar')
+        fields = ('id', 'name', 'url', 'description', 'scigym', 'repository', 'tags', 'topic', 'current_avatar')
 
 
 class EnvironmentWriteSerializer(serializers.ModelSerializer):
@@ -32,11 +32,11 @@ class EnvironmentWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Environment
         depth = 1
-        fields = ('id', 'name', 'description', 'repository', 'tags', 'topic', 'current_avatar')
+        fields = ('id', 'name', 'url', 'description', 'repository', 'tags', 'topic', 'current_avatar')
 
 class EnvironmentFormSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Environment
         depth = 1
-        fields = ('id', 'name', 'description', 'tags', 'topic', 'current_avatar')
+        fields = ('id', 'name', 'url', 'description', 'tags', 'topic', 'current_avatar')
