@@ -34,6 +34,7 @@ class Repository(Base):
     license = models.CharField(max_length=256, null=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     readme = models.TextField(blank=True, null=True)
+    readme_name = models.CharField(max_length=256, blank=True, null=True)
     public = models.BooleanField(default=True)
     pypi_name = models.CharField(max_length=256, null=True, blank=True)
 

@@ -45,28 +45,33 @@ class EnvironmentViewSet(viewsets.ModelViewSet):
         env_name = request.data['name']
         env_url = re.sub(' {1,}', '-', env_name)
 
+        repo = get_object_or_404(Repository, pk=request.data['repository'])
+
         env_data = {
             'name': env_name,
             'url': env_url,
             'description': request.data['description'],
             'tags': request.data['tags'],
-            'current_avatar': avatar
+            'current_avatar': avatar,
+            'repository': repo
         }
-        serializer = EnvironmentWriteSerializer(data=env_data)
-        if serializer.is_valid(raise_exception=True):
-            env = Environment.objects.create(
-                name=env_data['name'],
-                url=env_data['url'],
-                description=env_data['description'],
-                repository=Repository.objects.get(id=request.data['repository']),
-                tags=env_data['tags'],
-                current_avatar=env_data['current_avatar']
-            )
 
+        env = Environment.objects.create(
+            name=env_data['name'],
+            url=env_data['url'],
+            description=env_data['description'],
+            repository=repo,
+            tags=env_data['tags'],
+            current_avatar=env_data['current_avatar']
+        )
+
+        serializer = EnvironmentWriteSerializer(env, data=env_data)
+
+        if serializer.is_valid(raise_exception=True):
             if is_valid_uuid(request.data['topic']):
                 logger.info('valid UUID for topic')
                 env.topic= Topic.objects.get(id=request.data['topic'])
-                env.save()
+            env.save()
 
             return Response(serializer.data, status=201)
     

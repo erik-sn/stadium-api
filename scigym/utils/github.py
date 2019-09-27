@@ -100,10 +100,10 @@ class GithubUtils:
             response = requests.get(repo['contents_url'].replace('contents/{+path}', 'readme'), headers=self.client.headers)
             if response.ok:
                 readme = response.json()
-                repo.update({'readme': readme['content']})
+                repo.update({'readme': readme['content'], 'readme_name': readme['name']})
             else:
                 logger.info('Failed to included Readme.md.')
-                repo.update({'readme': null})
+                repo.update({'readme': null, 'readme_name': null})
             # TODO need to multi-thread this
             if self._is_gym_repo(repo['contents_url'].replace('{+path}', '')):
                 repo.update({'gym': True})
