@@ -11,6 +11,7 @@ from .config.views import app_config, image_config, index
 from .environments.views import EnvironmentViewSet, TopicViewSet
 from .contributors.views import ContributorViewSet
 from .images.views import ImageViewSet
+from .forums.views import MessageBoardViewSet, CommentViewSet
 
 if settings.DEBUG is True:
     from django.contrib.staticfiles.urls import staticfiles_urlpatterns
@@ -23,6 +24,8 @@ router.register('environments', EnvironmentViewSet)
 router.register('contributors', ContributorViewSet)
 router.register('topics', TopicViewSet)
 router.register('images', ImageViewSet)
+router.register('message_boards', MessageBoardViewSet)
+router.register('comments', CommentViewSet)
 
 urlpatterns = [
     path('api/admin/', admin.site.urls),

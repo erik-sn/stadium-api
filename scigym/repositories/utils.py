@@ -32,6 +32,7 @@ def initialize_repo_from_json(json: Dict, owner: User) -> Repository:
             'license': json['license']['name'] if json['license'] else None,
             'owner': owner,
             'readme': json['readme'],
+            'readme_name': json['readme_name'],
             'gym': json['gym']
         }
         if Repository.objects.filter(github_id=github_id).exists():

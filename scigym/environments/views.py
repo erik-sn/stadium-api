@@ -3,7 +3,6 @@ import re
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
-from rest_framework.exceptions import ValidationError
 
 from rest_framework import viewsets, status
 
@@ -44,38 +43,46 @@ class EnvironmentViewSet(viewsets.ModelViewSet):
         else:
             avatar = None
         env_name = request.data['name']
-        # convert spaces to dashes. TODO: Prohibit special characters in the name?
-        env_name = re.sub(' {2,}', '-', env_name)
+        env_url = re.sub(' {1,}', '-', env_name)
+
+        repo = get_object_or_404(Repository, pk=request.data['repository'])
+
         env_data = {
             'name': env_name,
+            'url': env_url,
             'description': request.data['description'],
             'tags': request.data['tags'],
-            'current_avatar': avatar
+            'current_avatar': avatar,
+            'repository': repo
         }
-        serializer = EnvironmentWriteSerializer(data=env_data)
-        if serializer.is_valid(raise_exception=True):
-            env = Environment.objects.create(
-                name=env_data['name'],
-                description=env_data['description'],
-                repository=Repository.objects.get(id=request.data['repository']),
-                tags=env_data['tags'],
-                current_avatar=env_data['current_avatar']
-            )
 
+        env = Environment.objects.create(
+            name=env_data['name'],
+            url=env_data['url'],
+            description=env_data['description'],
+            repository=repo,
+            tags=env_data['tags'],
+            current_avatar=env_data['current_avatar']
+        )
+
+        serializer = EnvironmentWriteSerializer(env, data=env_data)
+
+        if serializer.is_valid(raise_exception=True):
             if is_valid_uuid(request.data['topic']):
                 logger.info('valid UUID for topic')
                 env.topic= Topic.objects.get(id=request.data['topic'])
-                env.save()
+            env.save()
 
             return Response(serializer.data, status=201)
     
     def update(self, request, pk):
         env =  get_object_or_404(Environment, pk=pk)
         env_name = request.data['name']
-        env_name = re.sub(' {2,}', '-', env_name)
+        env_url = re.sub(' {1,}', '-', env_name)
 
         env_data = {
             'name': env_name,
+            'url': env_url,
             'description': request.data['description'],
             'tags': request.data['tags'],
         }
