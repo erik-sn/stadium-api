@@ -52,7 +52,7 @@ def save_image(uploaded_file: InMemoryUploadedFile, user) -> Image:
     )
 
 
-def delete_image(file_path: str) -> None:
+def delete_image(name: str) -> None:
     """removes an uploaded image
 
     Parameters
@@ -60,6 +60,6 @@ def delete_image(file_path: str) -> None:
     file_path - file path of the uploaded file
 
     """
-    logger.info(f'Deleting image with path: {file_path}')
+    logger.info(f'Deleting image with path: {name}')
 
-    os.unlink(file_path)
+    storage.delete(name)

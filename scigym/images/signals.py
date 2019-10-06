@@ -1,5 +1,4 @@
 import logging
-import os
 
 from django.db.models.signals import pre_delete 
 from django.dispatch import receiver
@@ -11,6 +10,7 @@ logger = logging.getLogger('django')
 
 
 @receiver(pre_delete, sender=Image)
-def delete_file(sender, instance, **kwargs):
+def delete_file(sender, instance: Image, **kwargs):
     if sender == Image:
-        delete_image(instance.file_path)
+        logger.info('Deleting image: {}'.format(instance.file_path))
+        delete_image(instance.name)
