@@ -21,6 +21,8 @@ def app_config(request):
 @api_view(['GET'])
 def image_config(request):
     config = ImageConfig.objects.all()
+    if len(config) == 0:
+        return Response(status=status.HTTP_404_NOT_FOUND)
     return Response(config[0].valid_image_formats, status=status.HTTP_200_OK)
 
 

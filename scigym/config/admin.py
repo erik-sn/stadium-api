@@ -4,5 +4,8 @@ from .models import ImageConfig
 
 
 @admin.register(ImageConfig)
-class ImageAdmin(admin.ModelAdmin):
-    pass
+class ImageConfigAdmin(admin.ModelAdmin):
+    list_display = ('valid_image_formats',)
+
+    fields = ('valid_image_formats',)
+

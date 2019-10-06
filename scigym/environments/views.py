@@ -1,4 +1,5 @@
 import logging
+import re
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
@@ -10,9 +11,12 @@ from .models import Environment, Topic, Image
 from .serializers import (
     EnvironmentSerializer,
     EnvironmentWriteSerializer,
+    EnvironmentFormSerializer,
     TopicSerializer
 )
-from .permissions import IsOwnerOrReadOnly, IsAdminOrReadOnly
+
+from scigym.config.permissions import IsAdminOrReadOnly
+from .permissions import IsOwnerOrReadOnly
 from scigym.utils.helper import is_valid_uuid
 
 logger = logging.getLogger('django')
@@ -38,42 +42,68 @@ class EnvironmentViewSet(viewsets.ModelViewSet):
             avatar = Image.objects.get(id=request.data['avatar'])
         else:
             avatar = None
+        env_name = request.data['name']
+        env_url = re.sub(' {1,}', '-', env_name)
+
+        repo = get_object_or_404(Repository, pk=request.data['repository'])
+
+        env_data = {
+            'name': env_name,
+            'url': env_url,
+            'description': request.data['description'],
+            'tags': request.data['tags'],
+            'current_avatar': avatar,
+            'repository': repo
+        }
+
         env = Environment.objects.create(
-            name=request.data['name'],
-            description=request.data['description'],
-            repository=Repository.objects.get(id=request.data['repository']),
-            tags=request.data['tags'],
-            current_avatar=avatar
+            name=env_data['name'],
+            url=env_data['url'],
+            description=env_data['description'],
+            repository=repo,
+            tags=env_data['tags'],
+            current_avatar=env_data['current_avatar']
         )
 
-        if is_valid_uuid(request.data['topic']):
-            logger.info('valid UUID for topic')
-            env.topic= Topic.objects.get(id=request.data['topic'])
+        serializer = EnvironmentWriteSerializer(env, data=env_data)
+
+        if serializer.is_valid(raise_exception=True):
+            if is_valid_uuid(request.data['topic']):
+                logger.info('valid UUID for topic')
+                env.topic= Topic.objects.get(id=request.data['topic'])
             env.save()
 
-        serializer = EnvironmentWriteSerializer(env)
-        return Response(serializer.data, status=201)
+            return Response(serializer.data, status=201)
     
     def update(self, request, pk):
         env =  get_object_or_404(Environment, pk=pk)
-        env.name = request.data['name']
-        env.description = request.data['description']
-        env.tags = request.data['tags']
-        logger.info(request.data)
+        env_name = request.data['name']
+        env_url = re.sub(' {1,}', '-', env_name)
+
+        env_data = {
+            'name': env_name,
+            'url': env_url,
+            'description': request.data['description'],
+            'tags': request.data['tags'],
+        }
+
         if is_valid_uuid(request.data['topic']):
             logger.info('valid UUID for topic')
-            env.topic = Topic.objects.get(id=request.data['topic'])
+            env_data['topic'] = Topic.objects.get(id=request.data['topic'])
         else:
-            env.topic = None
+            env_data['topic'] = None
+
         if is_valid_uuid(request.data['avatar_id']):
             logger.info('valid UUID for avatar')
-            env.current_avatar = Image.objects.get(id=request.data['avatar_id'])
+            env_data['current_avatar'] = Image.objects.get(id=request.data['avatar_id'])
         else:
-            env.current_avatar = None
-        env.save()
-        serializer = EnvironmentWriteSerializer(env)
-        return(Response(serializer.data, status=200))
+            env_data['current_avatar'] = None
 
+        serializer = EnvironmentFormSerializer(env, data=env_data)
+        if serializer.is_valid(raise_exception=True):
+
+            serializer.save()
+            return(Response(serializer.data, status=200))
 
     @action(['GET'], detail=False)
     def filter(self, request):
