@@ -17,7 +17,6 @@ from shutil import copyfile, rmtree
 
 logger = logging.getLogger('django')
 
-SAVED_IMAGES = settings.SAVED_IMAGES
 
 def save_image(uploaded_file: InMemoryUploadedFile, user) -> Image:
     """process requested file
@@ -48,20 +47,21 @@ def save_image(uploaded_file: InMemoryUploadedFile, user) -> Image:
         raise TypeError #django error
 
     # create unique path to save file to
-    uuid_name = f'{uuid.uuid4()}{file_extension}'
-    save_path = os.path.join(SAVED_IMAGES, uuid_name)
-
-    # write file to path
-    with open(save_path, 'wb+') as destination:
-        for chunk in uploaded_file.chunks():
-            destination.write(chunk)
+    # uuid_name = f'{uuid.uuid4()}{file_extension}'
+    # save_path = os.path.join(SAVED_IMAGES, uuid_name)
+    #
+    # # write file to path
+    # with open(save_path, 'wb+') as destination:
+    #     for chunk in uploaded_file.chunks():
+    #         destination.write(chunk)
 
     # save image object
     return Image.objects.create(
         name=file_name,
-        file_path=save_path,
+        file_path='',
         owner=user,
     )
+
 
 def delete_image(file_path: str) -> None:
     """removes an uploaded image
