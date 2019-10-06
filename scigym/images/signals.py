@@ -9,6 +9,7 @@ from scigym.images.utils import delete_image
 
 logger = logging.getLogger('django')
 
+
 @receiver(pre_delete, sender=Image)
 def delete_file(sender, instance, **kwargs):
     if sender == Image:

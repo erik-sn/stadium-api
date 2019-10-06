@@ -1,19 +1,12 @@
 from django.core.files.uploadedfile import InMemoryUploadedFile
-from django.conf import settings
+from django.core.files.storage import default_storage as storage
 
 from scigym.config.models import ImageConfig
 from scigym.images.models import Image
 
 import logging
-from typing import List, Tuple
-import uuid
-from uuid import UUID
 import os
-import pathlib
-import zipfile
-import tarfile
-import hashlib
-from shutil import copyfile, rmtree
+import uuid
 
 logger = logging.getLogger('django')
 
@@ -46,14 +39,10 @@ def save_image(uploaded_file: InMemoryUploadedFile, user) -> Image:
     if not file_extension in valid_file_types:
         raise TypeError #django error
 
-    # create unique path to save file to
-    # uuid_name = f'{uuid.uuid4()}{file_extension}'
-    # save_path = os.path.join(SAVED_IMAGES, uuid_name)
-    #
-    # # write file to path
-    # with open(save_path, 'wb+') as destination:
-    #     for chunk in uploaded_file.chunks():
-    #         destination.write(chunk)
+    uuid_name = f'{uuid.uuid4()}{file_extension}'
+    with storage.open(uuid_name, 'wb+') as destination:
+        for chunk in uploaded_file.chunks():
+            destination.write(chunk)
 
     # save image object
     return Image.objects.create(
