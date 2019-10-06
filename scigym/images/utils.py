@@ -36,8 +36,8 @@ def save_image(uploaded_file: InMemoryUploadedFile, user) -> Image:
 
     # check file extension
     _, file_extension = os.path.splitext(file_name)
-    if not file_extension in valid_file_types:
-        raise TypeError #django error
+    if file_extension.lower() not in valid_file_types:
+        raise TypeError('Invalid image format. Valid image formats: {}'.format(valid_file_types_str))
 
     uuid_name = f'{uuid.uuid4()}{file_extension}'
     with storage.open(uuid_name, 'wb+') as destination:
@@ -47,7 +47,7 @@ def save_image(uploaded_file: InMemoryUploadedFile, user) -> Image:
     # save image object
     return Image.objects.create(
         name=file_name,
-        file_path='',
+        file_path=storage.url(uuid_name),
         owner=user,
     )
 
