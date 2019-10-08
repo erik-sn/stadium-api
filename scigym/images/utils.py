@@ -1,5 +1,6 @@
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.files.storage import default_storage as storage
+from django.conf import settings
 
 from scigym.config.models import ImageConfig
 from scigym.images.models import Image
@@ -47,7 +48,8 @@ def save_image(uploaded_file: InMemoryUploadedFile, user) -> Image:
     # save image object
     return Image.objects.create(
         name=file_name,
-        file_path=storage.url(uuid_name),
+        url=storage.url(uuid_name),
+        file_path=os.path.join(settings.MEDIA_ROOT, uuid_name),
         owner=user,
     )
 

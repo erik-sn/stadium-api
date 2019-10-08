@@ -13,4 +13,4 @@ logger = logging.getLogger('django')
 def delete_file(sender, instance: Image, **kwargs):
     if sender == Image:
         logger.info('Deleting image: {}'.format(instance.file_path))
-        delete_image(instance.name)
+        delete_image(instance.file_path)
