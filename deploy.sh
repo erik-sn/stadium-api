@@ -12,7 +12,7 @@ npm run build
 
 # create-react-app builds this index html and uses it's relative path from the build
 # so we replace all of these static links with the AWS S3 location
-# sed -i -e "s,/static/,${AWS_S3_FOLDER},g" build/index.html
+sed -i -e "s,/static/,${AWS_S3_FOLDER},g" build/index.html
 
 cp -r ./build/static/* ../scigym-api/static
 cp ./build/index.html ../scigym-api/scigym/config/templates/config/
