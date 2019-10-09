@@ -10,5 +10,6 @@ npm run build
 cp -r ./build/static/* ../scigym-api/static
 cp ./build/index.html ../scigym-api/scigym/config/templates/config/
 cp ./build/favicon.png ../scigym-api/static/images/
+cp ./build/asset-manifest.json ../scigym-api/static/
 
 cd ../scigym-api

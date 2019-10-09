@@ -23,8 +23,7 @@ To upload your environment just follow the next few steps after standardizing yo
 * Click `+`.
 * Edit the information that will be displayed on our webpage as you desire. By default, your repository's `README` will also be displayed.
 * Submit your environment.
-* We will be informed about your submission and check whether the repository is valid.
-* Once we have accepted the submission, it will appear under `Recent Environments` for everyone to see!
+* You are done! You environment should now appear under `Recent Environments` for everyone to see!
 
 ## Add your environment to the scigym library
 
