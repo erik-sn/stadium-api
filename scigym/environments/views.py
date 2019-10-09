@@ -76,7 +76,7 @@ class EnvironmentViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=201)
     
     def update(self, request, pk):
-        env =  get_object_or_404(Environment, pk=pk)
+        env = get_object_or_404(Environment, pk=pk)
         env_name = request.data['name']
         env_url = re.sub(' {1,}', '-', env_name)
 
@@ -93,17 +93,19 @@ class EnvironmentViewSet(viewsets.ModelViewSet):
         else:
             env_data['topic'] = None
 
-        if is_valid_uuid(request.data['avatar_id']):
-            logger.info('valid UUID for avatar')
-            env_data['current_avatar'] = Image.objects.get(id=request.data['avatar_id'])
-        else:
-            env_data['current_avatar'] = None
-
         serializer = EnvironmentFormSerializer(env, data=env_data)
         if serializer.is_valid(raise_exception=True):
-
             serializer.save()
-            return(Response(serializer.data, status=200))
+
+            # TODO I don't know why we have to do this outside the serializer
+            if request.data['avatar'] is not None and is_valid_uuid(request.data['avatar']['id']):
+                env.current_avatar = Image.objects.get(id=request.data['avatar']['id'])
+            else:
+                env.current_avatar = None
+
+            env.save()
+
+            return Response(serializer.data, status=200)
 
     @action(['GET'], detail=False)
     def filter(self, request):

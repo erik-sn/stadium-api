@@ -24,6 +24,7 @@ class Environment(Base):
     topic = models.ForeignKey('Topic', null=True, on_delete=models.SET_NULL)
     current_avatar = models.ForeignKey(Image, null=True, on_delete=models.SET_NULL)
 
+
 class Topic(Base):
 
     name = models.CharField(max_length=100, unique=True, blank=False)

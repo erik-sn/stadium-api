@@ -105,6 +105,7 @@ venv.bak/
 /static/admin
 /static/django_extensions
 /static/rest_framework
+/media
 
 # mypy
 .mypy_cache/

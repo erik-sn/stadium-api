@@ -1,24 +1,16 @@
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.core.files.storage import default_storage as storage
 from django.conf import settings
 
 from scigym.config.models import ImageConfig
 from scigym.images.models import Image
 
 import logging
-from typing import List, Tuple
-import uuid
-from uuid import UUID
 import os
-import pathlib
-import zipfile
-import tarfile
-import hashlib
-from shutil import copyfile, rmtree
+import uuid
 
 logger = logging.getLogger('django')
 
-SAVED_IMAGES = settings.SAVED_IMAGES
-UPLOADED_STATIC_FILES = settings.UPLOADED_STATIC_FILES
 
 def save_image(uploaded_file: InMemoryUploadedFile, user) -> Image:
     """process requested file
@@ -45,30 +37,24 @@ def save_image(uploaded_file: InMemoryUploadedFile, user) -> Image:
 
     # check file extension
     _, file_extension = os.path.splitext(file_name)
-    if not file_extension in valid_file_types:
-        raise TypeError #django error
+    if file_extension.lower() not in valid_file_types:
+        raise TypeError('Invalid image format. Valid image formats: {}'.format(valid_file_types_str))
 
-    # create unique path to save file to
     uuid_name = f'{uuid.uuid4()}{file_extension}'
-    save_path = os.path.join(SAVED_IMAGES, uuid_name)
-    logger.info(f'Saving image at {save_path}')
-    upload_path = '/'+os.path.relpath(save_path, UPLOADED_STATIC_FILES)
-    logger.info(f'Image can be found at /static{upload_path}')
-
-    # write file to path
-    with open(save_path, 'wb+') as destination:
+    with storage.open(uuid_name, 'wb+') as destination:
         for chunk in uploaded_file.chunks():
             destination.write(chunk)
 
     # save image object
     return Image.objects.create(
         name=file_name,
-        file_path=save_path,
-        upload_path=upload_path,
+        url=storage.url(uuid_name),
+        file_path=os.path.join(settings.MEDIA_ROOT, uuid_name),
         owner=user,
     )
 
-def delete_image(file_path: str) -> None:
+
+def delete_image(name: str) -> None:
     """removes an uploaded image
 
     Parameters
@@ -76,6 +62,6 @@ def delete_image(file_path: str) -> None:
     file_path - file path of the uploaded file
 
     """
-    logger.info(f'Deleting image with path: {file_path}')
+    logger.info(f'Deleting image with path: {name}')
 
-    os.unlink(file_path)
+    storage.delete(name)

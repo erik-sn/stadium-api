@@ -1,26 +1,23 @@
 import logging
-import os
 
-from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import viewsets, status
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework import mixins
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser
 from rest_framework.decorators import action
 from django import forms
-from django.views.generic import View
-from django.http import HttpResponse
 
 from .permissions import IsOwnerOrReadOnly
-from scigym.images.utils import save_image, delete_image
+from scigym.images.utils import save_image
 from scigym.images.models import Image
 from scigym.images.serializers import ImageSerializer
 
 logger = logging.getLogger('django')
 
+
 class UploadImageForm(forms.Form):
     file = forms.ImageField()
+
 
 class ImageViewSet(viewsets.ModelViewSet):
     """
@@ -49,4 +46,3 @@ class ImageViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=201)
 
         return Response(form.errors, status=400)
-    

@@ -1,1 +1,1 @@
-web: gunicorn scigym.wsgi
+web: gunicorn scigym.wsgi:application

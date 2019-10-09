@@ -24,8 +24,9 @@ class ConfigManager(models.Manager):
         config, created = self.get_or_create(pk=1)
         return config
 
+
 class ImageConfig(models.Model):
-    valid_image_formats = ArrayField(models.CharField(max_length=10), default=list) #this should be a initial default
+    valid_image_formats = ArrayField(models.CharField(max_length=10), default=list)  #this should be a initial default
 
     objects = ConfigManager()
 

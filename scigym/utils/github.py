@@ -103,7 +103,7 @@ class GithubUtils:
                 repo.update({'readme': readme['content'], 'readme_name': readme['name']})
             else:
                 logger.info('Failed to included Readme.md.')
-                repo.update({'readme': null, 'readme_name': null})
+                repo.update({'readme': None, 'readme_name': None})
             # TODO need to multi-thread this
             if self._is_gym_repo(repo['contents_url'].replace('{+path}', '')):
                 repo.update({'gym': True})

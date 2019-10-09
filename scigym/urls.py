@@ -39,12 +39,10 @@ urlpatterns = [
     # http://www.django-rest-framework.org/api-guide/routers/#defaultrouter
     re_path(r'^/api$', RedirectView.as_view(url=reverse_lazy('api-root'), permanent=False)),
 
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG is True:
     urlpatterns += staticfiles_urlpatterns()
 
-urlpatterns += [
-    path('', index, {'resource': ''}),
-    path('<path:resource>', index)
-]
+urlpatterns += [re_path(r'^', index)]
