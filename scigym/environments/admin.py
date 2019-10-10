@@ -8,7 +8,7 @@ class EnvAdmin(admin.ModelAdmin):
     date_hierarchy = 'last_updated'
     list_display = ('name', 'description', 'scigym', 'repository', 'tags', 'topic', 'current_avatar')
 
-    fields = ('name', 'description', 'scigym')
+    fields = ('name', 'description', 'scigym', 'current_avatar')
 
     search_fields = ['name', 'repository']
 
